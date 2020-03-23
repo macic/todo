@@ -1,4 +1,5 @@
 import logging
+import sys
 from app.constants import WRONG_COMMAND
 from app.schemas.slack import Command
 
