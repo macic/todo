@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+
+  db:
+      container_name: postgres_container
+      image: postgres
+      environment:
+       # POSTGRES_USER: ${POSTGRES_USER:-postgres}
+       # POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+        PGDATA: /data/postgres
+      volumes:
+         - postgres:/data/postgres
+      ports:
+        - "5432:5432"
+      networks:
+        - project_network
+      restart: unless-stopped
+
+  mainapi:
+      container_name: mainapi_container
+      image: todo_image
+      build: .
+      volumes:
+        - .:/source/todo/
+      ports:
+        - "8123:8123"
+      expose:
+        - "8123"
+      depends_on:
+        - db
+      links:
+        - db
+      environment:
+        DB_HOST: db
+      command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8123
+      restart: "always"
+
+volumes:
+  postgres:
+
+networks:
+  project_network:
