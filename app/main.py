@@ -17,7 +17,7 @@ async def hello_world():
     return "hello"
 
 @app.post("/task/")
-async def add_task(request: Request):
+async def task_handler(request: Request):
     form = await request.form()
     command = Command(**form)
     log.info(command)
@@ -25,7 +25,18 @@ async def add_task(request: Request):
     command, rest = parse_command(command)
     if not command:
         return rest
-    return command
+
+    #dummy way to check postgres fast
+    if command == 'add':
+        from app.db.session import db_session
+        from app.crud.crud_item import CRUDItem
+        from app.schemas.item import ItemCreate
+        item = CRUDItem.create(db_session=db_session, obj_in=ItemCreate(title=rest))
+        log.info("item created")
+        log.info(item)
+    return item
+
+
 """
 INFO:app.main:token='i1WdxMDKKcKk1poifqbYhZ4X' 
 command='/todo' 
