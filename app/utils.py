@@ -11,3 +11,10 @@ def parse_command(command: Command):
         if actual_command in AVAILABLE_COMMANDS:
             return actual_command, rest
     return False, WRONG_COMMAND
+
+def get_db():
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 # Shared properties
 class ItemBase(BaseModel):
     title: str = None
-    no: int = 0
+    priority: int = 0
 
 
 # Properties to receive on item creation
@@ -20,7 +20,7 @@ class ItemUpdate(ItemBase):
 class ItemInDBBase(ItemBase):
     id: int
     title: str
-    no: int
+    priority: int
     user_id: str
     user_name: str
 
