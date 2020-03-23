@@ -21,7 +21,8 @@ class ItemInDBBase(ItemBase):
     id: int
     title: str
     no: int
-    user_id: int
+    user_id: str
+    user_name: str
 
     class Config:
         orm_mode = True
