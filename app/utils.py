@@ -1,5 +1,9 @@
+import logging
 from app.constants import WRONG_COMMAND
 from app.schemas.slack import Command
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+log = logging.getLogger(__name__)
 
 AVAILABLE_COMMANDS = ['add', 'edit', 'done', 'finish', 'move', 'switch', 'show']
 

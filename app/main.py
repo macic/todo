@@ -2,13 +2,11 @@ import logging
 import sys
 
 from fastapi import FastAPI
-
-from app.utils import parse_command
+from app.utils import parse_command, log
 from .schemas.slack import Command
 from starlette.requests import Request
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-log = logging.getLogger(__name__)
+
 app = FastAPI(debug=True, redoc_url=None)
 
 
