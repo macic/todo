@@ -1,10 +1,9 @@
-import logging
-import sys
 
 from fastapi import FastAPI
-from app.utils import parse_command, log
-from .schemas.slack import Command
 from starlette.requests import Request
+from .schemas.slack import Command
+from .crud import item
+from .utils import parse_command, log
 
 
 app = FastAPI(debug=True, redoc_url=None)
@@ -29,9 +28,9 @@ async def task_handler(request: Request):
         from app.db.session import db_session
         from app.crud.crud_item import CRUDItem
         from app.schemas.item import ItemCreate
-        item = CRUDItem.create(db_session=db_session, obj_in=ItemCreate(title=rest))
+        obj = item.create(db_session=db_session, obj_in=ItemCreate(title=rest))
         log.info("item created")
-        log.info(item)
+        log.info(obj)
     return item
 
 
