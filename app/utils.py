@@ -10,5 +10,4 @@ def parse_command(command: Command):
         rest = parts[1]
         if actual_command in AVAILABLE_COMMANDS:
             return actual_command, rest
-        else:
-            return False, WRONG_COMMAND
+    return False, WRONG_COMMAND
