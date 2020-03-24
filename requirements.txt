@@ -5,3 +5,5 @@ pydantic
 python-multipart
 uvicorn==0.11.3
 gunicorn==20.0.4
+pytest
+requests

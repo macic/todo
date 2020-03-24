@@ -1,0 +1,17 @@
+version: "3"
+services:
+
+  redis:
+    image: postgres:alpine
+    hostname: redis
+
+  tests:
+    image: limitengine
+    build: .
+    command: tox -v -e jenkins
+    volumes:
+      - .:/source/limit_engine/
+    depends_on:
+    - redis
+    environment:
+      REDIS_HOST: redis

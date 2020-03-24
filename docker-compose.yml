@@ -6,9 +6,10 @@ services:
       container_name: postgres_container
       image: postgres
       environment:
-       # POSTGRES_USER: ${POSTGRES_USER:-postgres}
-       # POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
         PGDATA: /data/postgres
+      hostname: postgres
       volumes:
          - postgres:/data/postgres
       ports:
@@ -25,8 +26,8 @@ services:
         - .:/source/todo/
       ports:
         - "8123:8123"
-      expose:
-        - "8123"
+      networks:
+        - project_network
       depends_on:
         - db
       links:

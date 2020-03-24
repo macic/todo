@@ -1,5 +1,4 @@
-import logging
-
+import os
 from app.db.init_db import init_db
 from app.db.session import db_session, engine
 from app.utils import log
@@ -19,6 +18,7 @@ def main():
     log.info("Creating initial data")
     init()
     log.info("Initial data created")
+    log.info(os.environ.get('DATABASE_URL') )
 
 
 if __name__ == "__main__":
