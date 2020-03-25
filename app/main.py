@@ -31,7 +31,7 @@ async def task_handler(request: Request):
         obj = item.create(db_session=db_session, obj_in=ItemCreate(title=rest))
         log.info("item created")
         log.info(obj)
-    return item
+    return "added fine"
 
 
 """
