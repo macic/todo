@@ -1,17 +1,32 @@
 version: "3"
 services:
 
-  redis:
-    image: postgres:alpine
-    hostname: redis
+  db:
+      image: postgres:alpine
+      environment:
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: pw
+        POSTGRES_DB: todo_db
+        PGDATA: /data/postgres
 
+      volumes:
+         - postgres:/data/postgres
+      ports:
+        - "5432:5432"
+      restart: unless-stopped
   tests:
-    image: limitengine
-    build: .
-    command: tox -v -e jenkins
-    volumes:
-      - .:/source/limit_engine/
-    depends_on:
-    - redis
-    environment:
-      REDIS_HOST: redis
+      image: todo_image
+      build: .
+      command: pytest app/tests/
+      volumes:
+        - .:/source/todo/
+      depends_on:
+      - db
+      environment:
+        DB_HOST: db
+        DB_USER: user
+        DB_PW: pw
+        DB_NAME: todo_db
+
+volumes:
+  postgres:
