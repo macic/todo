@@ -60,5 +60,4 @@ def test_delete_item():
     assert item3 is None
     assert item2.id == item.id
     assert item2.title == title
-    assert item2.title == title
     assert item2.user_id == user_id

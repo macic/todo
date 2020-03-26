@@ -15,7 +15,14 @@ async def hello_world():
 
 @app.post("/task/")
 async def task_handler(request: Request):
+
+
     form = await request.form()
+    log.info("json")
+    log.info(request.json())
+    log.info("form")
+    log.info(request.form())
+
     command = Command(**form)
     log.info(command)
 
@@ -26,7 +33,6 @@ async def task_handler(request: Request):
     #dummy way to check postgres fast
     if command == 'add':
         from app.db.session import db_session
-        from app.crud.crud_item import CRUDItem
         from app.schemas.item import ItemCreate
         obj = item.create(db_session=db_session, obj_in=ItemCreate(title=rest))
         log.info("item created")
