@@ -11,8 +11,8 @@ client = TestClient(main_app)
 
 def test_cancel_limit_not_found():
     client.post(
-        f"/{task}//",
-        json=[deposit_limit_weekly, deposit_limit_monthly],
+        f"/{task}/",
+        data=json.dumps()[deposit_limit_weekly, deposit_limit_monthly],
     )
 
 def test_create_item(superuser_token_headers):

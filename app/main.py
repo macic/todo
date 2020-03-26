@@ -18,11 +18,10 @@ async def task_handler(request: Request):
 
 
     form = await request.form()
-    js = await request.json()
-    log.info("json")
-    log.info(js)
+
     log.info("form")
     log.info(form)
+
 
     command = Command(**form)
     log.info(command)
