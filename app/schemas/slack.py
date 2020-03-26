@@ -13,5 +13,5 @@ class Command(BaseModel):
     text: str
 
 class BasicMessage(BaseModel):
-    response_type: str
+    response_type: str = "in_channel"
     text: str
