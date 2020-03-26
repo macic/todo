@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI
 from starlette.requests import Request
-from .schemas.slack import Command
+from .schemas.slack import Command, BasicMessage
 from .crud import item
 from .utils import parse_command, log
 
@@ -21,6 +21,8 @@ async def task_handler(request: Request):
 
     log.info("form")
     log.info(form)
+    log.info("content-type")
+    log.info(request.headers['content-type'])
 
 
     command = Command(**form)
@@ -36,8 +38,10 @@ async def task_handler(request: Request):
         from app.schemas.item import ItemCreate
         obj = item.create(db_session=db_session, obj_in=ItemCreate(title=rest))
         log.info("item created")
-        log.info(obj)
-    return "added fine"
+    return BasicMessage(**{
+    "response_type": "in_channel",
+    "text": "Added fine."
+})
 
 
 """

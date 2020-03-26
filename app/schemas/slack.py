@@ -11,3 +11,7 @@ class Command(BaseModel):
     team_id: str
     channel_id: str
     text: str
+
+class BasicMessage(BaseModel):
+    response_type: str
+    text: str
