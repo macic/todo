@@ -5,7 +5,7 @@ services:
       image: postgres:alpine
       environment:
         POSTGRES_USER: user
-        POSTGRES_PASSWORD: pw
+        POSTGRES_PASSWORD: password
         POSTGRES_DB: todo_db
         PGDATA: /data/postgres
 
@@ -25,7 +25,7 @@ services:
       environment:
         DB_HOST: db
         DB_USER: user
-        DB_PW: pw
+        DB_PW: password
         DB_NAME: todo_db
 
 volumes:
