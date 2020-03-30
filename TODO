@@ -6,3 +6,4 @@ design generic handlers for API calls incoming
 
 priority functionality tests and implementation
 
+automate the build in github/heroku to run tests before deployment if possible

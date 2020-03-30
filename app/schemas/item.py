@@ -6,9 +6,11 @@ class ItemBase(BaseModel):
     priority: int = 0
 
 
+
 # Properties to receive on item creation
 class ItemCreate(ItemBase):
-    pass
+    user_id: str
+    user_name: str
 
 
 # Properties to receive on item update

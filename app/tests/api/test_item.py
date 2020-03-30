@@ -1,13 +1,16 @@
+
 from app.main import app as main_app
 from app.db.session import db_session
 from app import crud
 from starlette.testclient import TestClient
-import urllib
+from starlette.requests import Request
+from starlette.responses import JSONResponse
+
+from app.schemas.slack import Command
+from app.utils import log
 
 client = TestClient(main_app)
-import json
 
-default_headers = {"Content-type": "application/x-www-form-urlencoded"}
 thedata2 = {'token': 'i1WdxMDKKcKk1poifqbYhZ4X',
             'team_id': 'T010E6NLJTX',
             'team_domain': 'app-tests-group',
@@ -21,22 +24,24 @@ thedata2 = {'token': 'i1WdxMDKKcKk1poifqbYhZ4X',
             'trigger_id': '1016737228323.1014226698949.c22285eb0dcacaecc9fd444aeee783ec'}
 
 
-def test_hello_world():
-    response = client.get(
-        f"/",
-        headers=default_headers
-    )
+def test_add_api_item(api_item: Command):
+    response = client.post("/task/", data=api_item.dict())
 
     assert response.status_code == 200
-
-
-def test_simple_add():
-    response = client.post(
-        f"/task/",
-        data=urllib.parse.urlencode(thedata2),
-        headers=default_headers
-    )
-    assert response.status_code == 200
-    assert response.content == True
-    items = crud.item.get_multi_by_owner(db_session, 'U010DN4S2DA')
+    assert response.json().get('text') == 'Added fine.'
+    items = crud.item.get_multi_by_owner(db_session, user_id=api_item.user_id)
     assert len(items) == 1
+
+def test_add_item_set_priority(api_item: Command):
+    client.post("/task/", data=api_item.dict())
+    items = crud.item.get_multi_by_owner(db_session, user_id=api_item.user_id)
+    assert len(items) == 1
+    assert items[0].priority == 0
+
+    # another item
+    item2 = api_item.dict().copy()
+    item2.update({"text": "add another"})
+    client.post("/task/", data=item2)
+    items = crud.item.get_multi_by_owner(db_session, user_id=api_item.user_id)
+    assert len(items) == 2
+    assert items[0].priority != items[1].priority
