@@ -10,7 +10,7 @@ from app.crud.base import CRUDBase
 
 class CRUDItem(CRUDBase[Item, ItemCreate, ItemUpdate]):
 
-    def get_multi_by_owner(
+    def get_multi_by_user_id(
             self, db_session: Session, *, user_id: str, skip=0, limit=100
     ) -> List[Item]:
         return (
@@ -21,7 +21,7 @@ class CRUDItem(CRUDBase[Item, ItemCreate, ItemUpdate]):
                 .all()
         )
 
-    def get_last_priority_by_owner(self, db_session: Session, *, user_id: str) -> int:
+    def get_last_priority_by_user_id(self, db_session: Session, *, user_id: str) -> int:
         item = (db_session.query(self.model)
                 .filter(Item.user_id == user_id)
                 .order_by(Item.priority.desc())

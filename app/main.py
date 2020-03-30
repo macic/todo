@@ -4,7 +4,6 @@ from starlette.responses import JSONResponse
 
 from app.handlers.command import CommandHandler
 from .schemas.slack import Command, BasicMessage, ErrorMessage
-from .crud import item
 from .utils import parse_command, log
 
 app = FastAPI(debug=True, redoc_url=None)

@@ -29,19 +29,27 @@ def test_add_api_item(api_item: Command):
 
     assert response.status_code == 200
     assert response.json().get('text') == 'Added fine.'
-    items = crud.item.get_multi_by_owner(db_session, user_id=api_item.user_id)
+    items = crud.item.get_multi_by_user_id(db_session, user_id=api_item.user_id)
     assert len(items) == 1
 
-def test_add_item_set_priority(api_item: Command):
+def test_add_item_increases_priority_for_user(api_item: Command):
     client.post("/task/", data=api_item.dict())
-    items = crud.item.get_multi_by_owner(db_session, user_id=api_item.user_id)
+    items = crud.item.get_multi_by_user_id(db_session, user_id=api_item.user_id)
     assert len(items) == 1
-    assert items[0].priority == 0
+    assert items[0].priority == 1
 
     # another item
     item2 = api_item.dict().copy()
     item2.update({"text": "add another"})
     client.post("/task/", data=item2)
-    items = crud.item.get_multi_by_owner(db_session, user_id=api_item.user_id)
+    items = crud.item.get_multi_by_user_id(db_session, user_id=api_item.user_id)
     assert len(items) == 2
     assert items[0].priority != items[1].priority
+
+    # another item but for different user
+    item3 = api_item.dict().copy()
+    item3.update({"user_id": "AN0TH3R"})
+    client.post("/task/", data=item3)
+    items = crud.item.get_multi_by_user_id(db_session, user_id=item3["user_id"])
+    assert len(items) == 1
+    assert items[0].priority == 1
