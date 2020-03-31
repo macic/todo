@@ -13,8 +13,8 @@ class CommandHandler:
         if not self._handler:
             raise WrongCommandException
 
-    def parse_text(self, rest: str):
-        return self._handler.parse_text(rest)
+    def parse_text(self, text: str):
+        return self._handler.parse_text(text)
 
     def handle(self, full_command: CommandSchema):
         return self._handler.handle(full_command)

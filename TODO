@@ -1,9 +1,7 @@
+add isort
 
-add black
-configure precommit hook
-
-design generic handlers for API calls incoming
-
-priority functionality tests and implementation
+configure precommit hook for isort and black
 
 automate the build in github/heroku to run tests before deployment if possible
+
+configure pycharm to work with docker-compose and run tests

@@ -7,8 +7,8 @@ from app.crud import item
 
 
 class AddItem(BaseHandler):
-    def parse_text(self, rest: str) -> None:
-        self.title = rest
+    def parse_text(self, text: str) -> None:
+        self.title = text
 
     def handle(self, full_command: CommandSchema):
         last_priority = item.get_last_priority_by_user_id(db_session=db_session, user_id=full_command.user_id)
