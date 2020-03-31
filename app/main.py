@@ -23,5 +23,6 @@ async def task_handler(request: Request):
         return JSONResponse({"text": rest})
 
     command = CommandHandler(command)
-    command.handle(rest, full_command)
+    command.parse_text(rest)
+    command.handle(full_command)
     return command.response()
