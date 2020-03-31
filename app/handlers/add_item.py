@@ -4,7 +4,6 @@ from app.schemas.item import ItemCreate
 from app.schemas.slack import Command as CommandSchema
 from app.handlers.base_handler import BaseHandler
 from app.crud import item
-from app.utils import log
 
 
 class AddItem(BaseHandler):

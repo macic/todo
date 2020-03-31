@@ -1,3 +1,4 @@
+from app.constants import WrongCommandException
 from app.schemas.slack import Command as CommandSchema
 from app.handlers.add_item import AddItem
 from app.handlers.edit_item import EditItem
@@ -8,9 +9,9 @@ class CommandHandler:
 
     def __init__(self, command: str) -> bool:
         actual_handler = self.mapping.get(command.lower())
-        self._handler = actual_handler()
+        self._handler = actual_handler() if actual_handler else None
         if not self._handler:
-            raise AttributeError
+            raise WrongCommandException
 
     def parse_text(self, rest: str):
         return self._handler.parse_text(rest)

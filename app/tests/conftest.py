@@ -5,7 +5,7 @@ from sqlalchemy.exc import ProgrammingError
 from app.db.init_db import init_db
 from app.db.session import db_session, engine
 from app.db.base_class import Base
-from app.schemas.item import ItemCreate
+from app.schemas.item import ItemCreate, Item
 from app.schemas.slack import AddCommand
 from app.tests.utils.utils import random_lower_string
 from app.utils import log
@@ -29,7 +29,7 @@ def cleanup_service(database_service):
 
 
 @pytest.fixture(scope="function")
-def item():
+def item() -> Item:
     title = random_lower_string()
     priority = 123
     user_id = "C@234"
@@ -39,7 +39,7 @@ def item():
 
 
 @pytest.fixture()
-def api_item():
+def api_item() -> AddCommand:
     return AddCommand(
         **{
             "token": "i1WdxMDKKcKk1poifqbYhZ4X",

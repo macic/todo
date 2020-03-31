@@ -1,12 +1,12 @@
+from app.constants import WRONG_COMMAND
+
 from app.main import app as main_app
 from app.db.session import db_session
 from app import crud
 from starlette.testclient import TestClient
-from starlette.requests import Request
-from starlette.responses import JSONResponse
 
+from app.schemas.item import Item
 from app.schemas.slack import Command
-from app.utils import log
 
 client = TestClient(main_app)
 
@@ -23,6 +23,14 @@ thedata2 = {
     "response_url": "https://hooks.slack.com/commands/T010E6NLJTX/1015703244994/44Xn80UxNd6VQUkPueLh75FK",
     "trigger_id": "1016737228323.1014226698949.c22285eb0dcacaecc9fd444aeee783ec",
 }
+
+
+def test_wrong_command(api_item: Command):
+    api_item.text = "wrong command"
+    response = client.post("/task/", data=api_item.dict())
+
+    assert response.status_code == 200
+    assert response.json().get("text") == WRONG_COMMAND
 
 
 def test_add_api_item(api_item: Command):
@@ -55,3 +63,16 @@ def test_add_item_increases_priority_for_user(api_item: Command):
     items = crud.item.get_multi_by_user_id(db_session, user_id=item3["user_id"])
     assert len(items) == 1
     assert items[0].priority == 1
+
+
+def test_edit_item(item: Item, api_item: Command):
+    api_item.user_id = item.user_id
+    api_item.text = (f"edit {item.priority} updated",)
+
+    response = client.post("/task/", data=api_item.dict())
+
+    assert response.status_code == 200
+    assert response.json().get("text") == "Edited fine."
+    items = crud.item.get_multi_by_user_id(db_session, user_id=api_item.user_id)
+    assert len(items) == 1
+    assert items[0].title == "updated"

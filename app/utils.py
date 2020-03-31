@@ -1,7 +1,8 @@
 import logging
 import sys
-from app.constants import WRONG_COMMAND
-from app.schemas.slack import Command
+from typing import Optional, Tuple
+
+from app.constants import WrongCommandException
 import json_log_formatter
 
 formatter = json_log_formatter.JSONFormatter()
@@ -13,14 +14,14 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 log = logging.getLogger(__name__)
 log.addHandler(json_handler)
 
-AVAILABLE_COMMANDS = ["add", "edit", "done", "finish", "move", "switch", "show"]
+AVAILABLE_COMMANDS = ["add", "create", "edit", "done", "finish", "move", "switch", "show"]
 
 
-def parse_command(command: Command):
-    parts = command.text.split(" ", 1)
+def split_by_first_space(text: str) -> Optional[Tuple[str, str]]:
+    parts = text.split(" ", 1)
     if len(parts) == 2:
-        actual_command = parts[0].lower()
+        first_part = parts[0].lower()
+        log.info("ACTUAL COMMAND", first_part)
         rest = parts[1]
-        if actual_command in AVAILABLE_COMMANDS:
-            return actual_command, rest
-    return False, WRONG_COMMAND
+        return first_part, rest
+    raise WrongCommandException
