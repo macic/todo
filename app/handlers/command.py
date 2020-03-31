@@ -2,12 +2,9 @@ from app.schemas.slack import Command as CommandSchema
 from app.handlers.add_item import AddItem
 from app.handlers.edit_item import EditItem
 
-class CommandHandler():
-    mapping = {
-        "add": AddItem,
-        "create": AddItem,
-        "edit": EditItem
-    }
+
+class CommandHandler:
+    mapping = {"add": AddItem, "create": AddItem, "edit": EditItem}
 
     def __init__(self, command: str) -> bool:
         actual_handler = self.mapping.get(command.lower())

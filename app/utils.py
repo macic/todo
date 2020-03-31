@@ -13,11 +13,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 log = logging.getLogger(__name__)
 log.addHandler(json_handler)
 
-AVAILABLE_COMMANDS = ['add', 'edit', 'done', 'finish', 'move', 'switch', 'show']
+AVAILABLE_COMMANDS = ["add", "edit", "done", "finish", "move", "switch", "show"]
+
 
 def parse_command(command: Command):
     parts = command.text.split(" ", 1)
-    if len(parts)==2:
+    if len(parts) == 2:
         actual_command = parts[0].lower()
         rest = parts[1]
         if actual_command in AVAILABLE_COMMANDS:

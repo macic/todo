@@ -18,7 +18,7 @@ def main():
     log.info("Creating initial data")
     init()
     log.info("Initial data created")
-    log.info(os.environ.get('DATABASE_URL') )
+    log.info(os.environ.get("DATABASE_URL"))
 
 
 if __name__ == "__main__":
