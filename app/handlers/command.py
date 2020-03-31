@@ -1,15 +1,17 @@
 from app.constants import WrongCommandException
+from app.db.session import Session
 from app.schemas.slack import Command as CommandSchema
 from app.handlers.add_item import AddItem
 from app.handlers.edit_item import EditItem
+from app.handlers.move_item import MoveItem
 
 
 class CommandHandler:
-    mapping = {"add": AddItem, "create": AddItem, "edit": EditItem}
+    mapping = {"add": AddItem, "create": AddItem, "edit": EditItem, "move": MoveItem}
 
-    def __init__(self, command: str) -> bool:
+    def __init__(self, command: str, db_session: Session) -> bool:
         actual_handler = self.mapping.get(command.lower())
-        self._handler = actual_handler() if actual_handler else None
+        self._handler = actual_handler(db_session) if actual_handler else None
         if not self._handler:
             raise WrongCommandException
 

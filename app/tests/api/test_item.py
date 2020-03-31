@@ -7,6 +7,7 @@ from starlette.testclient import TestClient
 
 from app.schemas.item import Item
 from app.schemas.slack import Command
+from app.utils import log
 
 client = TestClient(main_app)
 
@@ -76,3 +77,44 @@ def test_edit_item(item: Item, api_item: Command):
     items = crud.item.get_multi_by_user_id(db_session, user_id=api_item.user_id)
     assert len(items) == 1
     assert items[0].title == "updated"
+
+
+def test_edit_item_non_existant_priority(item: Item, api_item: Command):
+    api_item.user_id = item.user_id
+    api_item.text = (f"edit 999 updated",)
+
+    response = client.post("/task/", data=api_item.dict())
+
+    assert response.status_code == 200
+    assert response.json().get("text") != "Edited fine."
+
+
+def test_move_item_up(api_item: Command):
+    # add 3 items
+    for i in range(1, 4):
+        item = api_item.copy()
+        item.text = f"add title {i}"
+        client.post("/task/", data=item.dict())
+
+    items = crud.item.get_multi_by_user_id(db_session, user_id=api_item.user_id)
+    assert len(items) == 3
+    assert items[0].title == "title 1"
+    assert items[1].title == "title 2"
+    assert items[2].title == "title 3"
+
+    # move 3rd item up
+    move_api_command = api_item.copy()
+    move_api_command.text = "move 3 up"
+    response = client.post("/task/", data=move_api_command.dict())
+
+    assert response.status_code == 200
+    assert response.json().get("text") == "Moved fine."
+
+    items = crud.item.get_multi_by_user_id(db_session, user_id=api_item.user_id)
+    for item in items:
+        log.error(item.title)
+        log.error(item.priority)
+    assert len(items) == 3
+    assert items[0].title == "title 1"
+    assert items[1].title == "title 3"
+    assert items[2].title == "title 2"

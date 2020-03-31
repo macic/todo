@@ -1,10 +1,11 @@
-from typing import List, Optional, Generic, TypeVar, Type
+from typing import List, Optional, Generic, TypeVar, Type, Dict
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.db.base_class import Base
+from app.utils import log
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -37,9 +38,26 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db_session.refresh(db_obj)
         return db_obj
 
+    def update_many(self, db_session: Session, *, db_objs: List) -> ModelType:
+        obj_to_add = []
+        for dic in db_objs:
+            for db_obj, obj_in in dic.items():
+                obj_data = jsonable_encoder(db_obj)
+                update_data = obj_in.dict(exclude_unset=True)
+                for field in obj_data:
+                    if field in update_data:
+                        setattr(db_obj, field, update_data[field])
+                obj_to_add.append(db_obj)
+        db_session.add_all(obj_to_add)
+        db_session.commit()
+        # db_session.refresh_all()
+        return db_objs
+
     def update(self, db_session: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
+        log.error("XXX")
+        log.error(db_session)
         obj_data = jsonable_encoder(db_obj)
-        update_data = obj_in.dict(skip_defaults=True)
+        update_data = obj_in.dict(exclude_unset=True)
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
