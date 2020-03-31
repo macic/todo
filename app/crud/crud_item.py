@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -28,6 +28,13 @@ class CRUDItem(CRUDBase[Item, ItemCreate, ItemUpdate]):
                 .first()
                 )
         return item.priority if item else 0
+
+    def get_by_priority_and_user_id(self, db_session: Session, *, priority: int, user_id: str) -> Optional[Item]:
+        return (db_session.query(self.model)
+                .filter(Item.user_id == user_id, Item.priority == priority)
+                .order_by(Item.priority.desc())
+                .first()
+                )
 
 
 item = CRUDItem(Item)
