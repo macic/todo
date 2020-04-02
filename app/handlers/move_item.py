@@ -48,7 +48,7 @@ class MoveItem(BaseHandler):
             db_session=self.db_session,
             db_objs=[
                 {self.item_data: ItemUpdate(priority=new_priority)},
-                {copied_item: ItemUpdate(priority=previous_priority)},
+                {other_item: ItemUpdate(priority=previous_priority)},
             ],
         )
         # item.update(db_session=self.db_session, db_obj=self.item_data, obj_in=ItemUpdate(priority=new_priority))

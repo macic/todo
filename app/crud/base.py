@@ -50,12 +50,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 obj_to_add.append(db_obj)
         db_session.add_all(obj_to_add)
         db_session.commit()
-        # db_session.refresh_all()
         return db_objs
 
     def update(self, db_session: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
-        log.error("XXX")
-        log.error(db_session)
         obj_data = jsonable_encoder(db_obj)
         update_data = obj_in.dict(exclude_unset=True)
         for field in obj_data:

@@ -16,19 +16,38 @@ from app.utils import log
 #     init_db(db_session, engine)
 #
 #
-@pytest.fixture(autouse=True)
-def cleanup_service():
-    yield
-    tables = reversed(Base.metadata.sorted_tables)
+TABLE = "item"
+STATEMENT = "TRUNCATE TABLE %s CASCADE"
 
-    for table in tables:
-        try:
-            log.error("TRYING")
-            log.error(table.name)
-            db_session.execute(f"DELETE FROM item;")
-            # db_session.execute(f"truncate table {table.name} cascade;")
-        except ProgrammingError:
-            log.warning("table does not exist", table=table)
+
+@pytest.fixture(scope="function", autouse=True)
+def clear_tables():
+    """
+    This fixture will be executed after every test, clearing the
+    given table.
+    You can remove the autouse, and specify when it executed whenever you want.
+    """
+
+    yield
+    # db_session.autocommit = True
+    db_session.execute("TRUNCATE TABLE item CASCADE")
+    db_session.commit()
+    # db_session.autocommit = False
+
+
+# @pytest.fixture(autouse=True, scope="function")
+# def cleanup_service():
+#     # yield
+#     tables = reversed(Base.metadata.sorted_tables)
+#
+#     for table in tables:
+#         try:
+#             log.error("TRYING")
+#             log.error(table.name)
+#             db_session.execute(f"DELETE from sitem")
+#             # db_session.execute(f"truncate table {table.name} cascade;")
+#         except ProgrammingError:
+#             log.warning("table does not exist", table=table)
 
 
 @pytest.fixture(scope="function")
